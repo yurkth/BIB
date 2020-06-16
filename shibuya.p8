@@ -11,24 +11,34 @@ function _init()
 end
 
 scene={
- active=function(sc)
-  sc.init()
-  _update=sc.update
-  _draw=sc.draw
+ active=function(s)
+  s.init()
+  _update=s.update
+  _draw=s.draw
  end
 }
 
 scene.title={
- init=function() end,
- update=function() end,
+ init=function()
+	 ts=false
+	 fx0=16 fy0=25 fx1=111 fy1=72
+ end,
+ update=function()
+  if btn(🅾️) then
+   ts=true
+  end
+  if ts then
+   fx0=lerp(fx0,0,.1)
+   fy0=lerp(fy0,0,.1)
+   fx1=lerp(fx1,128,.1)
+   fy1=lerp(fy1,128,.1)
+   if (flr(fx0)==flr(fy0) and flr(fx1)==flr(fy1)) scene.active(scene.game)
+  end
+ end,
  draw=function()
   cls(7)
-  frame(16,25,96,48)
-  clip()
   print("press z to start",33,98,5)
-  if btn(🅾️) then
-   scene.active(scene.game)
-  end
+  frame(fx0,fy0,fx1,fy1)
  end
 }
 
@@ -38,7 +48,7 @@ scene.game={
  update=function() end,
  draw=function()
   cls(7)
-  frame(0,0,128,128)
+  frame(0,0,127,127)
   spr12t(1,4.5,.5,1,2)
   spr12t(4,9,1)
   spr12t(5,3,2)
@@ -59,30 +69,32 @@ function spr12t(n,cx,cy,...)
  spr12(n,12*cx+4,12*cy+4,...)
 end
 
-function rectf(x,y,w,h)
- rectfill(x,y,x+w-1,y+h-1)
-end
-
 function round(val)
  return flr(val+.5)
 end
 
-function frame(x,y,w,h)
+function lerp(s,e,t)
+ return s+(e-s)*t
+end
+
+function frame(x0,y0,x1,y1)
+ local w=x1-x0+1
+ local h=y1-y0+1
  function edgev(sx,sy,flip_x,flip_y)
-  sspr(8,18,4,5,x+sx,y+sy,4,5,flip_x,flip_y)
+  sspr(8,18,4,5,x0+sx,y0+sy,4,5,flip_x,flip_y)
  end
  function rectv(rx,ry,rw)
-  rectfill(x+rx,y+9+ry,x+w+rw,y+h-10-ry)
+  rectfill(x0+rx,y0+9+ry,x0+w+rw,y0+h-10-ry)
  end
  function sprv(sx,flip_x)
-  sspr(5,13,2,8,x+sx,y+h/2-4,2,8,flip_x)
+  sspr(5,13,2,8,x0+sx,y0+h/2-4,2,8,flip_x)
  end
  color(5)
  edgev(0,4,false,true)
  edgev(0,h-9,false,false)
  edgev(w-4,4,true,true)
  edgev(w-4,h-9,true,false)
- local offv=flr(h*0.15)
+ local offv=flr(h*.15)
  rectv(2,0,-3)
  rectv(1,round(offv/2),-2)
  rectv(0,offv,-1)
@@ -90,27 +102,27 @@ function frame(x,y,w,h)
  sprv(w-3,true)
  
  function edgeh(sx,sy,flip_x,flip_y)
-  sspr(7,12,5,4,x+sx,y+sy,5,4,flip_x,flip_y)
+  sspr(7,12,5,4,x0+sx,y0+sy,5,4,flip_x,flip_y)
  end
  function recth(rx,ry,rh)
-  rectfill(x+9+rx,y+ry,x+w-10-rx,y+h+rh)
+  rectfill(x0+9+rx,y0+ry,x0+w-10-rx,y0+h+rh)
  end
  function sprh(sy,flip_y)
-  sspr(2,16,8,2,x+w/2-4,y+sy,8,2,false,flip_y)
+  sspr(2,16,8,2,x0+w/2-4,y0+sy,8,2,false,flip_y)
  end
  edgeh(4,0,false,true)
  edgeh(w-9,0,true,true)
  edgeh(4,h-4,false,false)
  edgeh(w-9,h-4,true,false)
- local offh=flr(w*0.15)
+ local offh=flr(w*.15)
  recth(0,2,-3)
  recth(round(offh/2),1,-2)
  recth(offh,0,-1)
  sprh(1,true)
  sprh(h-3,false)
  
- rectfill(x+4,y+4,x+w-5,y+h-5,7)
- clip(x+4,y+4,w-8,h-8)
+ rectfill(x0+4,y0+4,x0+w-5,y0+h-5,7)
+ clip(x0+4,y0+4,w-8,h-8)
 end
 __gfx__
 77777777777700550000550000000005500000550000550000000000000000000000000000000000000000000000000000000000000000000000000000000000
