@@ -16,6 +16,7 @@ function _init()
  skipop=false
  skiped=false
  goc=0
+ clear=false
  scene.active(scene.title)
 end
 
@@ -74,8 +75,14 @@ scene.title={
   -- select
   print("story",51,87,5)
   print("endless",51,96,5)
-  sspr(85,3,9,9,35,cur and 85 or 94)
-  pset(44,cur and 89 or 98,5)
+  local sy=cur and 0 or 9
+  sspr(85,3,9,9,35,85+sy)
+  if clear then
+   spr12(22,25,82+sy,1,1,true)
+   pset(29,89+sy,5)
+   pset(34,89+sy,5)
+  end
+  pset(44,89+sy,5)
   if cur then
    line(50,93,70,93,6)
   else
@@ -454,6 +461,7 @@ scene.gameover={
 
 scene.ed={
  init=function()
+  clear=true
   goc=0
 	 anim=0
 	 cx=0
